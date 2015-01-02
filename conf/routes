@@ -10,3 +10,4 @@ GET     /includes/*file                 controllers.Assets.at(path="/public", fi
 GET     /webjars/*file              controllers.WebJarAssets.at(file)
 
 GET     /mappa              controllers.Application.mappa()
+GET     /rivers             controllers.OverPassControler.askForRiversOnMyScreen()
