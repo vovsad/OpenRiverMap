@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Simple example</title>
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.7.0/ol.css" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.7.0/ol.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div id="map" class="map"></div>
+  </div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+var osmxmlFormat = new ol.format.OSMXML();
+
+var vectorSource = new ol.source.Vector({
+  loader: function(extent, resolution, projection) {
+    var epsg4326Extent =
+        ol.proj.transformExtent(extent, projection, 'EPSG:4326');
+    var url = 'https://www.overpass-api.de/api/interpreter?data=' + 
+        '[out:xml][timeout:60];' + 
+        'area["boundary"~"administrative"]["name"~"Львів"];' + 
+        'node(area)["amenity"~"water"];' + 
+        'out;';
+    $.ajax(url).then(function(response) {
+      console.log("Loaded");
+      console.log(response);
+      var features = osmxmlFormat.readFeatures(response,
+          {featureProjection: projection});
+      vectorSource.addFeatures(features);
+    });
+  }
+});
+
+var vector = new ol.layer.Vector({
+  source: vectorSource
+});
+
+var raster = new ol.layer.Tile({
+      source: new ol.source.OSM()
+    });
+var view = new ol.View({
+    center: [0, 0],
+    maxZoom: 19,
+    zoom: 8
+  });
+
+var map = new ol.Map({
+  layers: [raster, vector],
+  target: document.getElementById('map'),
+  controls: ol.control.defaults({
+    attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+      collapsible: false
+    })
+  }),
+  view: view
+});
+
+var geolocation = new ol.Geolocation({
+  projection: view.getProjection(),
+  tracking: true
+});
+
+geolocation.on('error', function(error) {
+  console.log(error.message);
+});
+
+var positionFeature = new ol.Feature();
+positionFeature.setStyle(new ol.style.Style({
+  image: new ol.style.Circle({
+    radius: 6,
+    fill: new ol.style.Fill({
+      color: '#3399CC'
+    }),
+    stroke: new ol.style.Stroke({
+      color: '#fff',
+      width: 2
+    })
+  })
+}));
+
+var featuresOverlay = new ol.layer.Vector({
+  map: map,
+  source: new ol.source.Vector({
+    features: [positionFeature]
+  })
+});
+
+var geolocation = new ol.Geolocation({
+  projection: view.getProjection(),
+  tracking: true
+});
+geolocation.once('change:position', function() {
+  view.setCenter(geolocation.getPosition());
+  positionFeature.setGeometry(geolocation.getPosition() ?
+      new ol.geom.Point(geolocation.getPosition()) : null);
+
+});
+
+</script>
+
+</body>
+</html>

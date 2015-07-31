@@ -7,7 +7,10 @@ GET     /                           controllers.Application.index()
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /includes/*file                 controllers.Assets.at(path="/public", file)
-GET     /webjars/*file              controllers.WebJarAssets.at(file)
+#GET     /webjars/*file              controllers.WebJarAssets.at(file)
 
 GET     /mappa              controllers.Application.mappa()
-GET     /rivers             controllers.OverPassControler.askForRiversOnMyScreen()
+
+# JSONs
+GET     /rivers/:e/:n/:s/:w             controllers.OverPassController.askForRiversOnMyScreen(e: Double, n: Double, s: Double, w: Double)
+GET     /river/:e/:n/:s/:w              controllers.OverPassController.askForRiverGeoJSON(e: Double, n: Double, s: Double, w: Double)
