@@ -19,6 +19,12 @@
 </div>
 
 </div>
+<div class="panel panel-default">
+<div class="panel-heading">
+      <h3 class="panel-title">Total selected distance</h3>
+    </div>
+  <div id="total-length-text"></div>
+</div>
 
 <script type="text/javascript">
 var osmxmlFormat = new ol.format.OSMXML();
@@ -95,19 +101,27 @@ var selectedRiverStyle = new ol.style.Style({
         width: 4
       })
     });
-
+var clonedRiverStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+        color: '#003399',
+        width: 4
+      })
+    });
+var clonedFeature;
 function selectStyleFunction(feature, resolution) {
       var geometry = feature.getGeometry();
       if (geometry instanceof ol.geom.LineString && 
             addedSegments.indexOf(feature.getId()) == -1) {
         totalSelectedLength += formatLength(geometry);
         addedSegments.push(feature.getId());
-        //console.log(formatLength(geometry));
-        console.log("set");
-        geometry.getCoordinates().forEach(function(item){console.log(ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'));});
-        
+        // console.log(formatLength(geometry));
+        // console.log("set");
+        // geometry.getCoordinates().forEach(function(item){console.log(ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'));});
+        // clonedFeature = feature.clone();
+        // clonedFeature.setStyle(clonedRiverStyle);
 
         console.log(totalSelectedLength);
+        setCalculationOutputs();
       };
 
       return [selectedRiverStyle];
@@ -184,25 +198,87 @@ var formatLength = function(line) {
 
 
 map.on("click", function(e) {
-      map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-      console.log("event");
-      console.log(ol.proj.transform(e.coordinate, 'EPSG:3857', 'EPSG:4326'));
+    select.getFeatures().on('remove', function(event) {
 
-   // use lonlat
-
-   // If you are using OpenStreetMap (etc) tiles and want to convert back 
-   // to gps coords add the following line :-
-   // lonlat.transform( map.projection,map.displayProjection);
-
-   // Longitude = lonlat.lon
-   // Latitude  = lonlat.lat
+      clearCalculationOutputs();
+      });
+      console.log("removing selection?");
     });
-});
+
+//  var selectedFeatures = select.getFeatures();
+//       map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+//       console.log("event");
+//       console.log(ol.proj.transform(e.coordinate, 'EPSG:3857', 'EPSG:4326'));
+
+//    // use lonlat
+
+//    // If you are using OpenStreetMap (etc) tiles and want to convert back 
+//    // to gps coords add the following line :-
+//    // lonlat.transform( map.projection,map.displayProjection);
+
+//    // Longitude = lonlat.lon
+//    // Latitude  = lonlat.lat
+//     });
+//});
 
 
-//orm Calculations
+//Calculations
 var totalSelectedLength = 0;
 var addedSegments = [];
+
+//Route UI
+var startPoint = new ol.Feature();
+var destPoint = new ol.Feature();
+
+// A transform function to convert coordinates from EPSG:3857
+// to EPSG:4326.
+var transform = ol.proj.getTransform('EPSG:3857', 'EPSG:4326');
+
+function clearCalculationOutputs(){
+  totalSelectedLength = 0;
+  addedSegments = [];
+  document.getElementById("total-length-text").innerHTML = "0 km";
+}
+function setCalculationOutputs(){
+  document.getElementById("total-length-text").innerHTML = Math.round(totalSelectedLength)/1000 + " km";
+}
+
+
+
+
+
+
+
+// Register a map click listener.
+// map.on('click', function(event) {
+//   // if (startPoint.getGeometry() == null) {
+//   //   // First click.
+//   //   startPoint.setGeometry(new ol.geom.Point(event.coordinate));
+//   // } else if (destPoint.getGeometry() == null) {
+//   //   // Second click.
+//   //   destPoint.setGeometry(new ol.geom.Point(event.coordinate));
+//   //   // Transform the coordinates from the map projection (EPSG:3857)
+//   //   // to the server projection (EPSG:4326).
+//   //   var startCoord = transform(startPoint.getGeometry().getCoordinates());
+//   //   var destCoord = transform(destPoint.getGeometry().getCoordinates());
+    
+//     draw = new ol.interaction.Draw({
+//       source: new ol.source.Vector({
+//       style: new ol.style.Style({
+//           stroke: new ol.style.Stroke({
+//             color: '#660000',
+//             width: 4
+//           })
+//         }),
+//       features: currentFeature
+//       }),
+//       type: 'LineString'
+//     });
+//     map.addInteraction(draw);
+//   // }
+// });
+
+
 </script>
 
 </body>
