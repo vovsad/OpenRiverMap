@@ -1,30 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Open River Map</title>
-<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.7.0/ol.css" type="text/css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.7.0/ol.js"></script>
-
+    <title>Open River Map</title>
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.15.0/css/ol.css" type="text/css">
+    <script src="http://openlayers.org/en/v3.15.0/build/ol.js"></script>
 </head>
+
 <body>
 <div class="container-fluid">
 
-<div class="row-fluid">
-  <div class="span12">
-    <div id="map" class="map"></div>
+  <div class="row-fluid">
+    <div class="span12">
+      <div id="map" class="map">
+      </div>
+    </div>
+    </div>
+
+  <div class="row-fluid">
+    <div class="span12">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Total selected distance</h3>
+        </div>
+        <div id="total-length-text">0 km</div>
+        </div>
+
+    </div>
   </div>
 </div>
 
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-      <h3 class="panel-title">Total selected distance</h3>
-    </div>
-  <div id="total-length-text"></div>
-</div>
+<style type="text/css">
+  .map {
+  height: 400px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+</style>
 
 <script type="text/javascript">
 var osmxmlFormat = new ol.format.OSMXML();
@@ -41,8 +60,6 @@ var vectorSource = new ol.source.Vector({
         '(._;>;);' +
         'out;';
     $.ajax(url).then(function(response) {
-      console.log("Loaded");
-      console.log(response);
       var features = osmxmlFormat.readFeatures(response,
           {featureProjection: projection});
       vectorSource.addFeatures(features);
@@ -61,6 +78,7 @@ var vector = new ol.layer.Vector({
     })
 });
 
+
 var raster = new ol.layer.Tile({
       source: new ol.source.OSM()
     });
@@ -72,10 +90,10 @@ var view = new ol.View({
   });
 
 var select = new ol.interaction.Select({
-    // condition: function(evt) {
-    //   return evt.originalEvent.type == 'mousemove' ||
-    //       evt.type == 'singleclick';
-    // },
+     // condition: function(evt) {
+     //   return evt.originalEvent.type == 'mousemove' 
+     //       evt.type == 'singleclick';
+     // },
     style: selectStyleFunction 
   });
 
@@ -202,8 +220,62 @@ map.on("click", function(e) {
 
       clearCalculationOutputs();
       });
-      console.log("removing selection?");
     });
+
+
+var startPointCoordinates = 0;
+var endPointCoordinates = 0;
+var dotIconStyle = new ol.style.Style({
+  image: new ol.style.Circle({
+    radius: 6,
+    fill: new ol.style.Fill({
+      color: '#3399CC'
+    }),
+    stroke: new ol.style.Stroke({
+      color: '#fff',
+      width: 2
+    })
+  })
+});
+
+map.on("dblclick", function(e) {
+      console.log("start or finish");
+      var coordinate = e.coordinate;
+      var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
+          coordinate, 'EPSG:3857', 'EPSG:4326'));
+
+      console.log('You clicked here:' + hdms);
+      // map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+      //   var f = feature.clone();
+      //   f.setGeometry(feature.getGeometry());
+      //   f.setStyle(feature.getStyle(e));
+      //   marker.getSource().addFeature(f);
+      //   //console.log(feature.U);
+      // });
+
+
+
+      var iconStartFeature = new ol.Feature({
+          geometry: new ol.geom.Point(coordinate)  
+      });
+      iconStartFeature.setStyle(dotIconStyle);
+
+      if(startPointCoordinates === 0){
+        startPointCoordinates = iconStartFeature;
+      }else if(endPointCoordinates === 0){
+        endPointCoordinates = iconStartFeature;
+      }else{
+          featuresOverlay.getSource().removeFeature(startPointCoordinates);
+          featuresOverlay.getSource().removeFeature(endPointCoordinates);
+          startPointCoordinates = endPointCoordinates = 0;
+          return false;
+      }
+
+      //add icon to vector source
+      featuresOverlay.getSource().addFeature(iconStartFeature);
+      return false;
+    });
+
 
 //  var selectedFeatures = select.getFeatures();
 //       map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
