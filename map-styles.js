@@ -4,12 +4,21 @@ var selectedRiverStyle = new ol.style.Style({
         width: 4
       })
     });
-var clonedRiverStyle = new ol.style.Style({
+var anyRiverStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({
-        color: '#003399',
+        color: '#3399CC',
         width: 4
       })
     });
+
+var clonedRiverStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+        color: 'red',
+        width: 4
+      })
+    });
+
+
 var dotIconStyle = new ol.style.Style({
   image: new ol.style.Circle({
     radius: 6,
@@ -22,5 +31,3 @@ var dotIconStyle = new ol.style.Style({
     })
   })
 });
-
-function ffff(){return [clonedRiverStyle]}

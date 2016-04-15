@@ -21,12 +21,7 @@ var vectorSource = new ol.source.Vector({
 
 var vector = new ol.layer.Vector({
   source: vectorSource,
-  style: new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: '#3399CC',
-        width: 4
-      })
-    })
+  style: [anyRiverStyle]
 });
 var raster = new ol.layer.Tile({
       source: new ol.source.OSM()
@@ -45,7 +40,7 @@ var select = new ol.interaction.Select({
      //   return evt.originalEvent.type == 'mousemove' 
      //       evt.type == 'singleclick';
      // },
-    style: selectStyleFunction 
+    // style: [selectedRiverStyle]
   });
 
 var modify = new ol.interaction.Modify({
@@ -63,28 +58,6 @@ var map = new ol.Map({
   }),
   view: view
 });
-
-
-var clonedFeature;
-
-function selectStyleFunction(feature, resolution) {
-      var geometry = feature.getGeometry();
-      if (geometry instanceof ol.geom.LineString && 
-            addedSegments.indexOf(feature.getId()) == -1) {
-        totalSelectedLength += formatLength(geometry);
-        addedSegments.push(feature.getId());
-        // console.log(formatLength(geometry));
-        // console.log("set");
-        // geometry.getCoordinates().forEach(function(item){console.log(ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'));});
-        // clonedFeature = feature.clone();
-        // clonedFeature.setStyle(clonedRiverStyle);
-
-        console.log(totalSelectedLength);
-        setCalculationOutputs();
-      };
-
-      return [selectedRiverStyle];
-}
 
 
 
@@ -116,29 +89,6 @@ var formatLength = function(line) {
   return output;
 };
 
-
-
-var startPointCoordinates = 0;
-var endPointCoordinates = 0;
-
-
-//  var selectedFeatures = select.getFeatures();
-//       map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-//       console.log("event");
-//       console.log(ol.proj.transform(e.coordinate, 'EPSG:3857', 'EPSG:4326'));
-
-//    // use lonlat
-
-//    // If you are using OpenStreetMap (etc) tiles and want to convert back 
-//    // to gps coords add the following line :-
-//    // lonlat.transform( map.projection,map.displayProjection);
-
-//    // Longitude = lonlat.lon
-//    // Latitude  = lonlat.lat
-//     });
-//});
-
-
 //Calculations
 var totalSelectedLength = 0;
 var addedSegments = [];
@@ -155,6 +105,7 @@ function clearCalculationOutputs(){
   totalSelectedLength = 0;
   addedSegments = [];
   document.getElementById("total-length-text").innerHTML = "0 km";
+  featuresOverlay.getSource().clear();
 }
 function setCalculationOutputs(){
   document.getElementById("total-length-text").innerHTML = Math.round(totalSelectedLength)/1000 + " km";
