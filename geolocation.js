@@ -10,10 +10,16 @@ geolocation.on('error', function(error) {
 var positionFeature = new ol.Feature();
 positionFeature.setStyle(dotIconStyle);
 
-var featuresOverlay = new ol.layer.Vector({
+var geolocationOverlay = new ol.layer.Vector({
     map : map,
     source : new ol.source.Vector({
 	features : [ positionFeature ]
+    })
+});
+var featuresOverlay = new ol.layer.Vector({
+    map : map,
+    source : new ol.source.Vector({
+
     })
 });
 

@@ -111,38 +111,3 @@ function setCalculationOutputs(){
   document.getElementById("total-length-text").innerHTML = Math.round(totalSelectedLength)/1000 + " km";
 }
 
-
-
-
-
-
-
-// Register a map click listener.
-// map.on('click', function(event) {
-//   // if (startPoint.getGeometry() == null) {
-//   //   // First click.
-//   //   startPoint.setGeometry(new ol.geom.Point(event.coordinate));
-//   // } else if (destPoint.getGeometry() == null) {
-//   //   // Second click.
-//   //   destPoint.setGeometry(new ol.geom.Point(event.coordinate));
-//   //   // Transform the coordinates from the map projection (EPSG:3857)
-//   //   // to the server projection (EPSG:4326).
-//   //   var startCoord = transform(startPoint.getGeometry().getCoordinates());
-//   //   var destCoord = transform(destPoint.getGeometry().getCoordinates());
-    
-//     draw = new ol.interaction.Draw({
-//       source: new ol.source.Vector({
-//       style: new ol.style.Style({
-//           stroke: new ol.style.Stroke({
-//             color: '#660000',
-//             width: 4
-//           })
-//         }),
-//       features: currentFeature
-//       }),
-//       type: 'LineString'
-//     });
-//     map.addInteraction(draw);
-//   // }
-// });
-

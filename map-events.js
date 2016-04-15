@@ -56,14 +56,6 @@ map.on("dblclick", function(e) {
           coordinate, 'EPSG:3857', 'EPSG:4326'));
 
       console.log('You clicked here:' + hdms);
-      // map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-      //   var f = feature.clone();
-      //   f.setGeometry(feature.getGeometry());
-      //   f.setStyle(feature.getStyle(e));
-      //   marker.getSource().addFeature(f);
-      //   //console.log(feature.U);
-      // });
-
 
       return false;
 });
