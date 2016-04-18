@@ -91,7 +91,29 @@ var formatLength = function(line) {
 
 //Calculations
 var totalSelectedLength = 0;
-var addedSegments = [];
+//key-value map
+var addedSegments = new Object();
+addedSegments.deleteAll = function(){
+    for (key in addedSegments){
+		if(typeof addedSegments[key] != 'function'){
+		    delete addedSegments[key]; 
+		}
+    }
+    };
+addedSegments.remove = function(key){
+    delete addedSegments[key];
+}
+addedSegments.push = function(key, value){
+    addedSegments[key] = value;
+}
+addedSegments.contains = function(key){
+    for (item in addedSegments){
+		if(item == key){
+			return true;
+    }
+    }
+    return false;
+}
 
 //Route UI
 var startPoint = new ol.Feature();
@@ -103,7 +125,7 @@ var transform = ol.proj.getTransform('EPSG:3857', 'EPSG:4326');
 
 function clearCalculationOutputs(){
   totalSelectedLength = 0;
-  addedSegments = [];
+  addedSegments.deleteAll();
   document.getElementById("total-length-text").innerHTML = "0 km";
   featuresOverlay.getSource().clear();
 }

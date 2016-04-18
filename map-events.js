@@ -11,9 +11,9 @@ map.on("click", function(e) {
       var feature = event.target.item(0);
       var geometry = feature.getGeometry();
       if (geometry instanceof ol.geom.LineString && 
-            addedSegments.indexOf(feature.getId()) == -1) {
+            !addedSegments.contains(feature.getId())) {
         //totalSelectedLength += formatLength(geometry);
-        addedSegments.push(feature.getId());
+        addedSegments.push(feature.getId(), geometry);
         // console.log(formatLength(geometry));
         var startCoordinatesInGeometryArray = getCloseCoordinatesArrayIndex(coordinate, geometry.getCoordinates());
 
@@ -34,7 +34,7 @@ map.on("click", function(e) {
       map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
               var geometry = feature.getGeometry();
               if (geometry instanceof ol.geom.LineString && 
-                    addedSegments.indexOf(feature.getId()) == -1) {
+                    !addedSegments.contains(feature.getId())) {
                       clearSelection = false;
             }
       });
