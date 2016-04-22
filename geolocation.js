@@ -1,6 +1,6 @@
 var geolocation = new ol.Geolocation({
     projection : view.getProjection(),
-    tracking : true
+    tracking : false
 });
 
 geolocation.on('error', function(error) {
@@ -16,19 +16,11 @@ var geolocationOverlay = new ol.layer.Vector({
 	features : [ positionFeature ]
     })
 });
-var featuresOverlay = new ol.layer.Vector({
-    map : map,
-    source : new ol.source.Vector({
 
-    })
-});
-
-var geolocation = new ol.Geolocation({
-    projection : view.getProjection(),
-    tracking : true
-});
 geolocation.once('change:position', function() {
     view.setCenter(geolocation.getPosition());
     positionFeature.setGeometry(geolocation.getPosition() ? new ol.geom.Point(geolocation.getPosition()) : null);
 
 });
+
+

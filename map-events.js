@@ -10,20 +10,22 @@ map.on("click", function(e) {
     select.getFeatures().on('add', function(event) {
       var feature = event.target.item(0);
       var geometry = feature.getGeometry();
-      if (geometry instanceof ol.geom.LineString && 
-            !addedSegments.contains(feature.getId())) {
-        //totalSelectedLength += formatLength(geometry);
+      if (geometry instanceof ol.geom.LineString && !addedSegments.contains(feature.getId())) {
         addedSegments.push(feature.getId(), geometry);
-        // console.log(formatLength(geometry));
         var startCoordinatesInGeometryArray = getCloseCoordinatesArrayIndex(coordinate, geometry.getCoordinates());
-
         var clonedFeature = feature.clone();
         clonedFeature.setStyle(clonedRiverStyle);
-
+//------------------
+console.log("coordinate: " + ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'));
+console.log("clonedFeature.getGeometry().getCoordinates(): ");
+clonedFeature.getGeometry().getCoordinates().forEach(function(item, index){console.log(index + " " + ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'))});
+console.log("clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray): ");
+clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray).forEach(function(item, index){console.log(index + " " + ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'))});
+//------------------
         clonedFeature.getGeometry().setCoordinates(
           clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray));
+
         totalSelectedLength += formatLength(clonedFeature.getGeometry());
-        
         featuresOverlay.getSource().addFeature(clonedFeature);
 
         setCalculationOutputs();

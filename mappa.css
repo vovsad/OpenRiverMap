@@ -3,3 +3,14 @@
   width: 100%;
   margin-bottom: 10px;
 }
+
+.ol-control button, .ol-attribution, .ol-scale-line-inner {
+  font-family: 'Lucida Grande',Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif;
+}
+.locate-me {
+  top: 65px;
+  left: .5em;
+}
+.ol-touch .locate-me {
+  top: 80px;
+}

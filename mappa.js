@@ -26,7 +26,12 @@ var vector = new ol.layer.Vector({
 var raster = new ol.layer.Tile({
       source: new ol.source.OSM()
     });
+var featuresOverlay = new ol.layer.Vector({
+    map : map,
+    source : new ol.source.Vector({
 
+    })
+});
 
 var view = new ol.View({
     center: ol.proj.transform([23.06,49.48], 'EPSG:4326', 'EPSG:3857'),
@@ -47,6 +52,32 @@ var modify = new ol.interaction.Modify({
   features: select.getFeatures()
 });
 
+var locateMe = function(opt_options) {
+
+    var options = opt_options || {};
+
+    var button = document.createElement('button');
+    button.innerHTML = '&#9899';
+
+    var this_ = this;
+    var doGeoLocation = function(e) {
+      geolocation.setTracking(true);
+    };
+
+    button.addEventListener('click', doGeoLocation, false);
+
+    var element = document.createElement('div');
+    element.className = 'locate-me ol-unselectable ol-control';
+    element.appendChild(button);
+
+    ol.control.Control.call(this, {
+      element: element,
+      target: options.target
+    });
+
+  };
+  ol.inherits(locateMe, ol.control.Control);
+  
 var map = new ol.Map({
   layers: [raster, vector],
   interactions: ol.interaction.defaults().extend([select, modify]),
@@ -55,7 +86,9 @@ var map = new ol.Map({
     attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
       collapsible: false
     })
-  }),
+  }).extend([
+             new locateMe()
+             ]),
   view: view
 });
 
@@ -114,10 +147,6 @@ addedSegments.contains = function(key){
     }
     return false;
 }
-
-//Route UI
-var startPoint = new ol.Feature();
-var destPoint = new ol.Feature();
 
 // A transform function to convert coordinates from EPSG:3857
 // to EPSG:4326.
