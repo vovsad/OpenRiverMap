@@ -14,16 +14,19 @@ map.on("click", function(e) {
         addedSegments.push(feature.getId(), geometry);
         var startCoordinatesInGeometryArray = getCloseCoordinatesArrayIndex(coordinate, geometry.getCoordinates());
         var clonedFeature = feature.clone();
-        clonedFeature.setStyle(clonedRiverStyle);
+//TODO: Why it does not work with cloned feature?
+//      clonedFeature.setStyle(clonedRiverStyle);
+        feature.setStyle(clonedRiverStyle);
 //------------------
-console.log("coordinate: " + ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'));
-console.log("clonedFeature.getGeometry().getCoordinates(): ");
-clonedFeature.getGeometry().getCoordinates().forEach(function(item, index){console.log(index + " " + ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'))});
-console.log("clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray): ");
-clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray).forEach(function(item, index){console.log(index + " " + ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'))});
+//console.log("coordinate: " + ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'));
+//console.log("clonedFeature.getGeometry().getCoordinates(): ");
+//clonedFeature.getGeometry().getCoordinates().forEach(function(item, index){console.log(index + " " + ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'))});
+//console.log("clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray): ");
+//clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray).forEach(function(item, index){console.log(index + " " + ol.proj.transform(item, 'EPSG:3857', 'EPSG:4326'))});
 //------------------
-        clonedFeature.getGeometry().setCoordinates(
-          clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray));
+//TODO: Add part of the feature through cloned feature
+//        clonedFeature.getGeometry().setCoordinates(
+//          clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray));
 
         totalSelectedLength += formatLength(clonedFeature.getGeometry());
         featuresOverlay.getSource().addFeature(clonedFeature);

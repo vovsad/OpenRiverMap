@@ -28,13 +28,11 @@ var raster = new ol.layer.Tile({
     });
 var featuresOverlay = new ol.layer.Vector({
     map : map,
-    source : new ol.source.Vector({
-
-    })
+    source : new ol.source.Vector()
 });
 
 var view = new ol.View({
-    center: ol.proj.transform([23.06,49.48], 'EPSG:4326', 'EPSG:3857'),
+    center: ol.proj.transform([25.3,48.8], 'EPSG:4326', 'EPSG:3857'),
     maxZoom: 19,
     minZoom: 9,
     zoom: 11
