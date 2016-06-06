@@ -27,8 +27,8 @@ var raster = new ol.layer.Tile({
       source: new ol.source.OSM()
     });
 var featuresOverlay = new ol.layer.Vector({
-    map : map,
-    source : new ol.source.Vector()
+    source : new ol.source.Vector(),
+	style: [clonedRiverStyle]
 });
 
 var view = new ol.View({
@@ -43,7 +43,7 @@ var select = new ol.interaction.Select({
      //   return evt.originalEvent.type == 'mousemove' 
      //       evt.type == 'singleclick';
      // },
-    // style: [selectedRiverStyle]
+     style: [selectedRiverStyle]
   });
 
 var modify = new ol.interaction.Modify({
@@ -77,7 +77,7 @@ var locateMe = function(opt_options) {
   ol.inherits(locateMe, ol.control.Control);
   
 var map = new ol.Map({
-  layers: [raster, vector],
+  layers: [raster, vector, featuresOverlay],
   interactions: ol.interaction.defaults().extend([select, modify]),
   target: document.getElementById('map'),
   controls: ol.control.defaults({

@@ -1,7 +1,7 @@
 var selectedRiverStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({
         color: '#33CC00',
-        width: 4
+        width: 2
       })
     });
 var anyRiverStyle = new ol.style.Style({
