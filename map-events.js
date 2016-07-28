@@ -15,13 +15,13 @@ map.on("click", function(e) {
         var startCoordinatesInGeometryArray = getCloseCoordinatesArrayIndex(coordinate, geometry.getCoordinates());
         var clonedFeature = feature.clone();
         clonedFeature.setStyle(clonedRiverStyle);
-
 //TODO: Add part of the feature through cloned feature
 //        clonedFeature.getGeometry().setCoordinates(
 //          clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray));
 
         totalSelectedLength += formatLength(clonedFeature.getGeometry());
         featuresOverlay.getSource().addFeature(clonedFeature);
+        addEndPoint(clonedFeature.getGeometry().getCoordinates());
         setCalculationOutputs();
       };
       });
@@ -73,4 +73,11 @@ function getCloseCoordinatesArrayIndex(coor, coorArray){
   }
   function twoDigitsAfterDot(n){
     return parseFloat(n).toFixed(2);
+  }
+  
+  function addEndPoint(coordinates){
+	  var endPointFeature = new ol.Feature();
+	  endPointFeature.setStyle(dotIconStyle);
+	  endPointFeature.setGeometry(new ol.geom.Point(coordinates[coordinates.length-1]));
+	  featuresOverlay.getSource().addFeature(endPointFeature);
   }
