@@ -3,7 +3,7 @@ var vectorSource = new ol.source.Vector({
     var epsg4326 =
         ol.proj.transformExtent(extent, projection, 'EPSG:4326');
     var bbox = epsg4326[1] + ',' + epsg4326[0] + ',' + epsg4326[3] + ',' + epsg4326[2];    
-    var url = 'https://www.overpass-api.de/api/interpreter?data=' + 
+    var url = 'http://www.overpass-api.de/api/interpreter?data=' + 
         '[out:xml][timeout:60];' + 
 //        'area["boundary"~"administrative"]["name"~"Рудне"];' + 
         'way["waterway"~"river"](' + bbox + ');' + 

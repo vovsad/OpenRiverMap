@@ -21,7 +21,7 @@ map.on("click", function(e) {
 
         totalSelectedLength += formatLength(clonedFeature.getGeometry());
         featuresOverlay.getSource().addFeature(clonedFeature);
-        addEndPoint(clonedFeature.getGeometry().getCoordinates());
+        addStartEndPoints(clonedFeature.getGeometry().getCoordinates());
         setCalculationOutputs();
       };
       });
@@ -75,9 +75,18 @@ function getCloseCoordinatesArrayIndex(coor, coorArray){
     return parseFloat(n).toFixed(2);
   }
   
-  function addEndPoint(coordinates){
-	  var endPointFeature = new ol.Feature();
-	  endPointFeature.setStyle(dotIconStyle);
+
+  function addStartEndPoints(coordinates){
+      var endPointFeature = new ol.Feature();
+      var startPointFeature = new ol.Feature();
+      endPointFeature.setStyle(dotIconStyle);startPointFeature.setStyle(dotIconStyle);
+
+      /*if(typeof endPointFeature.getGeometry() !== "undefined"){
+
+      }else*/{
 	  endPointFeature.setGeometry(new ol.geom.Point(coordinates[coordinates.length-1]));
-	  featuresOverlay.getSource().addFeature(endPointFeature);
+	  startPointFeature.setGeometry(new ol.geom.Point(coordinates[0]));
+      }
+	  featuresOverlay.getSource().addFeatures([endPointFeature, startPointFeature]);
   }
+ 
