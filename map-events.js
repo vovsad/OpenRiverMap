@@ -33,6 +33,9 @@ map.on("click", function(e) {
                     !addedSegments.contains(feature.getId())) {
                       clearSelection = false;
             }
+          if (geometry instanceof ol.geom.Point) {
+              console.log("This is a Point, its Style: " + feature.getStyle());
+          }
       });
 
       if(clearSelection){
