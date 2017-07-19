@@ -137,6 +137,8 @@ addedSegments.remove = function(key){
 addedSegments.push = function(key, value){
     addedSegments[key] = value;
 }
+//TODO:
+//have to be rewritten, probably something like if(addedSegments[key]) return true;
 addedSegments.contains = function(key){
     for (item in addedSegments){
 		if(item == key){
@@ -144,6 +146,16 @@ addedSegments.contains = function(key){
     }
     }
     return false;
+}
+
+addedSegments.getAll = function(){
+    var tmp = new Array;
+    for (key in addedSegments){
+        if(typeof addedSegments[key] != 'function'){
+            tmp.push(addedSegments[key]);
+        }
+    }
+    return tmp;
 }
 
 // A transform function to convert coordinates from EPSG:3857

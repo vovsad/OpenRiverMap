@@ -18,6 +18,12 @@ var clonedRiverStyle = new ol.style.Style({
       })
     });
 
+var RedPoint = new ol.style.Style({
+    stroke: new ol.style.Circle({
+        color: 'red',
+        width: 4
+    })
+});
 
 var dotIconStyle = new ol.style.Style({
   image: new ol.style.Circle({

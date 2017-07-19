@@ -7,6 +7,7 @@ map.on("click", function(e) {
     // select.getFeatures().on('remove', function(event) {
     //   clearCalculationOutputs();
     //   });
+
     select.getFeatures().on('add', function(event) {
       var feature = event.target.item(0);
       var geometry = feature.getGeometry();
@@ -19,23 +20,32 @@ map.on("click", function(e) {
 //        clonedFeature.getGeometry().setCoordinates(
 //          clonedFeature.getGeometry().getCoordinates().slice(startCoordinatesInGeometryArray));
 
-        totalSelectedLength += formatLength(clonedFeature.getGeometry());
-        featuresOverlay.getSource().addFeature(clonedFeature);
-        addStartEndPoints(clonedFeature.getGeometry().getCoordinates());
-        setCalculationOutputs();
+        var isItNewFeature = true;
+        featuresOverlay.getSource().getFeatures().forEach(function(feature){
+           if(feature.getGeometry().getCoordinates()[0][0] == clonedFeature.getGeometry().getCoordinates()[0][0] &&
+               feature.getGeometry().getCoordinates()[0][1] == clonedFeature.getGeometry().getCoordinates()[0][1]){
+               console.log("Here it is");
+               isItNewFeature = false;
+           }
+        });
+if(isItNewFeature) {
+    totalSelectedLength += formatLength(clonedFeature.getGeometry());
+    featuresOverlay.getSource().addFeature(clonedFeature);
+    addStartEndPoints(clonedFeature.getGeometry().getCoordinates());
+    setCalculationOutputs();
+}
+
       };
       });
 
       var clearSelection = true;
       map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+          //console.log("Pixel: ", e.pixel);
               var geometry = feature.getGeometry();
               if (geometry instanceof ol.geom.LineString && 
                     !addedSegments.contains(feature.getId())) {
                       clearSelection = false;
             }
-          if (geometry instanceof ol.geom.Point) {
-              console.log("This is a Point, its Style: " + feature.getStyle());
-          }
       });
 
       if(clearSelection){
@@ -92,4 +102,12 @@ function getCloseCoordinatesArrayIndex(coor, coorArray){
       }
 	  featuresOverlay.getSource().addFeatures([endPointFeature, startPointFeature]);
   }
- 
+
+  function compareCoors(l, r){
+    if(l[0] === r[0] && l[1] === r[1]) return true;
+    return false;
+  }
+
+modify.on("modifystart", function(e) {console.log("in modifystart")});
+modify.on("modifyend", function(e) {console.log("in modifyend")});
+modify.on("propertychange", function(e) {console.log("in propertychange")});
